@@ -16,7 +16,7 @@ export type Option<T> = {
 	IsNone: boolean,
 
 	Unwrap: <T>() -> T,
-	Evaluate: <R>(Some: (object: T) -> R, None: () -> R) -> R,
+	Evaluate: <R>(SomeFunc: (object: T) -> R, NoneFunc: () -> R) -> R,
 	ForSome: <R>(func: (object: T) -> R) -> R?
 }
 
