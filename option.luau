@@ -1,14 +1,8 @@
 local option = {}
 
-function option.__index(self, key: any)
-	if key == "IsSome" then
-		return rawget(self, "__value") ~= math.huge + 1
-	elseif key == "IsNone" then
-		return rawget(self, "__value") == math.huge + 1
-	end
-
-	return rawget(self, key)
-end
+---------------------------------------------------------------------------------------------
+-- TYPES
+---------------------------------------------------------------------------------------------
 
 -- The `Option` base type.
 -- Look inside of the `new()` function for documentation.
@@ -23,6 +17,10 @@ export type Option<T> = {
 
 -- The `None` superset type for Option. (Value doesn't exist)
 export type None = Option<any>
+
+---------------------------------------------------------------------------------------------
+-- NEW (AND METHODS)
+---------------------------------------------------------------------------------------------
 
 -- Create a new `Option` with an object of type `T`.
 function new<T>(object: T): Option<T>
@@ -52,6 +50,20 @@ function new<T>(object: T): Option<T>
 	return self
 end
 
+---------------------------------------------------------------------------------------------
+-- METAMETHODS
+---------------------------------------------------------------------------------------------
+
+function option.__index(self, key: any)
+	if key == "IsSome" then
+		return rawget(self, "__value") ~= math.huge + 1
+	elseif key == "IsNone" then
+		return rawget(self, "__value") == math.huge + 1
+	end
+
+	return rawget(self, key)
+end
+
 function option.__tostring(self)
 	if self.IsNone then
 		return "None"
@@ -59,9 +71,13 @@ function option.__tostring(self)
 	return self.IsSome and `Some<{typeof(self.__value)}>({self.__value})`
 end
 
+---------------------------------------------------------------------------------------------
+-- MODULE
+---------------------------------------------------------------------------------------------
+
 local module = setmetatable({}, {
 	__call = function()
-		return new, new(math.huge + 1)::None
+		return new, new(math.huge + 1)
 	end,
 })
 
